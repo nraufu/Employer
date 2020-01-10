@@ -4,6 +4,9 @@
   "description": "A restful API employees management system",
   "main": "index.js",
   "scripts": {
+    "start": "babel-node ./server/index.js",
+    "dev": "nodemon --exec babel-node ./server/index.js",
+    "build": "babel server -d dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,5 +19,19 @@
   "bugs": {
     "url": "https://github.com/nraufu/Employer/issues"
   },
-  "homepage": "https://github.com/nraufu/Employer#readme"
+  "homepage": "https://github.com/nraufu/Employer#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/node": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "bcryptjs": "^2.4.3",
+    "eslint": "^6.8.0",
+    "joi": "^14.3.1",
+    "nodemon": "^2.0.2"
+  }
 }
