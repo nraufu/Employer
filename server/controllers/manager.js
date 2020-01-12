@@ -1,22 +1,28 @@
-import bcryptjs, { compareSync } from 'bcryptjs';
+import bcryptjs from 'bcryptjs';
 import managerDb from '../models/dummyDb';
 import assignToken from '../helpers/assignToken';
+import responseHandler from '../helpers/response';
 
 const manager = {
     createManager(req, res) {
         try {
-            const { fullName , email, national_id, phonNumber, date_of_birth, password } = req.body;
+            const { fullName , email, national_id, phoneNumber, date_of_birth, password } = req.body;
             const user = managerDb.find((element) => element.email === email);
-            if(user) return res.status(409).json({"conflict": "User already exist"});
+            if(user) return responseHandler(res, 409, {"conflict": "User already exist"});
             const hashPassword = bcryptjs.hashSync(password, 5);
-            const newUser = {fullName: fullName, email: email, national_id: national_id, phonNumber: phonNumber, date_of_birth: date_of_birth, status: "active", position: "Manager", password: hashPassword};
+            const newUser = {fullName: fullName, email: email, national_id: national_id, phoneNumber: phoneNumber, date_of_birth: date_of_birth, status: "active", position: "Manager", password: hashPassword};
             managerDb.push(newUser);
             const userInfo = managerDb[managerDb.length-1];
-            const token = assignToken({email: userInfo.email});
-            return res.status(201).json({"success": "User Successfully created", newUser: userInfo, token});
-        } catch(err) {
-          res.status(500).json({"Error" : err});
-          console.log(err)
+            assignToken({email: userInfo.email});
+            return responseHandler(res, 201, {"success": "Manager Successfully created", newManager: {
+                fullName: userInfo.fullName,
+                email: userInfo.email,
+                phoneNumber: userInfo.phoneNumber,
+                position: userInfo.postion,
+                status: userInfo.status
+            }});
+        } catch(error) {
+          return responseHandler(res, 500, {"Error": error})
         }
     },
 
@@ -24,13 +30,13 @@ const manager = {
         try {
             const { email, password } = req.body;
             const user = managerDb.find((element) => element.email === email);
-            if(!user) return res.status(404).json({"Error": "User doesn't exist"});
+            if(!user) return responseHandler(res, 404, {"Error": "User doesn't exist"});
             const isPasswordValid = bcryptjs.compareSync(password, user.password);
-            if(!isPasswordValid) return res.status(400).json({"Error": "incorrect password"});
+            if(!isPasswordValid) return responseHandler(res, 400, {"Error": "incorrect password"});
             const token = assignToken({email: user.email});
-            if(user && isPasswordValid) return res.status(200).json({"success": "User successfully logged in", "User": user.fullName, token});
-        } catch (err) {
-            res.status(500).json({"Error" : err});
+            if(user && isPasswordValid) return responseHandler(res, 200, {"success": "User successfully logged in", "Manager": user.fullName, token});
+        } catch (error) {
+           return responseHandler(res, 500, {"Error": error})
         }
     }
 }
