@@ -5,6 +5,8 @@ import validate from '../middlewares/validate';
 const router = express.Router();
 
 router.post('/', validate.createEmployee, employee.addEmployee);
-router.patch('/:id',validate.paramValidation, employee.editEmployee);
+router.put('/:id',validate.paramValidation, employee.editEmployee);
+router.put('/:id/activate', validate.paramValidation, employee.activateEmployee);
+router.put('/:id/suspend', validate.paramValidation, employee.suspendEmployee);
 
 export default router;
