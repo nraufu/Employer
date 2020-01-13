@@ -52,6 +52,21 @@ const employee = {
         } catch (error) {
             responseHandler(res, 500, {Error: error})
         }
+    },
+
+    suspendEmployee(req, res){
+        try {
+            const employee = employeeDb.find((element) => element.id === Number(req.params.id));
+            if(!employee) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
+            if(employee.status === "active") {
+                employee.status = "suspend";
+                return responseHandler(res, 200, {Activation: "employee Suspended successfully", "employee status": employee.status});
+            } else { 
+                return responseHandler(res, 400, { badRequest: 'employee already supsended'});
+            }
+        } catch (error) {
+            responseHandler(res, 500, {Error: error})
+        }
     }
 }
 
