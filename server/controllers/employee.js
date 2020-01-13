@@ -29,11 +29,26 @@ const employee = {
 
     editEmployee(req, res) {
         try {
-            const employeeId = employeeDb.find((element) => element.id === Number(req.params.id));
+            const employeeId = employeeDb.findIndex((element) => element.id === Number(req.params.id));
             if(!employeeId) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
             const foundEmployee = {...employeeDb[employeeId]};
             employeeDb[employeeId] = {...foundEmployee, ...req.body};
             return responseHandler(res, 200, {Success: "employee successfully edited", updateInfo: employeeDb[employeeId]});
+        } catch (error) {
+            responseHandler(res, 500, {Error: error})
+        }
+    },
+
+    activateEmployee(req, res){
+        try {
+            const employee = employeeDb.find((element) => element.id === Number(req.params.id));
+            if(!employee) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
+            if(employee.status === "inactive") {
+                employee.status = "active";
+                return responseHandler(res, 200, {Activation: "employee activated successfully", "employee status": employee.status});
+            } else { 
+                return responseHandler(res, 400, { badRequest: 'employee already active'})
+            }
         } catch (error) {
             responseHandler(res, 500, {Error: error})
         }
