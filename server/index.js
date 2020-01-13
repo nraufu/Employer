@@ -1,6 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import managerRoute from './routes/manager';
+import employeeRoute from './routes/employee';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -15,5 +16,6 @@ app.get('/', (req, res) => {
 });
 
 app.use('/auth', managerRoute);
+app.use('/employees', employeeRoute);
 
 app.listen(port, () => console.log(`Listening to port ${port}`));

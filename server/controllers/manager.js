@@ -1,5 +1,5 @@
 import bcryptjs from 'bcryptjs';
-import managerDb from '../models/dummyDb';
+import managerDb from '../models/managerDb';
 import assignToken from '../helpers/assignToken';
 import responseHandler from '../helpers/response';
 
@@ -7,8 +7,8 @@ const manager = {
     createManager(req, res) {
         try {
             const { fullName , email, national_id, phoneNumber, date_of_birth, password } = req.body;
-            const user = managerDb.find((element) => element.email === email);
-            if(user) return responseHandler(res, 409, {"conflict": "User already exist"});
+            const user = managerDb.find((element) => element.email === email || element.national_id === national_id || element.phoneNumber === phoneNumber);
+            if(user) return responseHandler(res, 409, { Error: "User with same credentials already exists (email, phoneNumber or national Id)"});
             const hashPassword = bcryptjs.hashSync(password, 5);
             const newUser = {fullName: fullName, email: email, national_id: national_id, phoneNumber: phoneNumber, date_of_birth: date_of_birth, status: "active", position: "Manager", password: hashPassword};
             managerDb.push(newUser);
@@ -22,7 +22,8 @@ const manager = {
                 status: userInfo.status
             }});
         } catch(error) {
-          return responseHandler(res, 500, {"Error": error})
+            responseHandler(res, 500, {Error: error})
+            console.log(error);
         }
     },
 
