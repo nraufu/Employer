@@ -59,13 +59,24 @@ const employee = {
             const employee = employeeDb.find((element) => element.id === Number(req.params.id));
             if(!employee) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
             if(employee.status === "active") {
-                employee.status = "suspend";
+                employee.status = "inactive";
                 return responseHandler(res, 200, {Activation: "employee Suspended successfully", "employee status": employee.status});
             } else { 
                 return responseHandler(res, 400, { badRequest: 'employee already supsended'});
             }
         } catch (error) {
             responseHandler(res, 500, {Error: error})
+        }
+    },
+
+    deleteEmployee(req, res){
+        try {
+            const employeeIndex = employeeDb.findIndex((element) => element.id === Number(req.params.id));
+            if(!employeeIndex) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
+            employeeDb.splice(employeeIndex, 1);
+            return responseHandler(res, 200, { deleted: "employee removed successfully" });
+        } catch (error) {
+            responseHandler(res, 500, {Error: error});
         }
     }
 }
