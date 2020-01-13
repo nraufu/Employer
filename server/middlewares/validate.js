@@ -39,7 +39,16 @@ const validate = {
             const { error } = Joi.validate(req.body, schema);
             if(error) return responseHandler(res, 400, { "error": error.details[0].message });
             next();
-        }
+        },
+
+        paramValidation(req, res, next) {
+            const schema = {
+              id: Joi.number().required().error(() => 'employee Id number must be integer')
+            };
+             const { error } = Joi.validate(req.params, schema);
+            if(error) return responseHandler(res, 400, { "error": error.details[0].message });
+            next();
+    }
 }
 
 

@@ -25,6 +25,18 @@ const employee = {
             responseHandler(res, 500, { "Error": error })
             console.log(error);
         }
+    },
+
+    editEmployee(req, res) {
+        try {
+            const employeeId = employeeDb.find((element) => element.id === Number(req.params.id));
+            if(!employeeId) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
+            const foundEmployee = {...employeeDb[employeeId]};
+            employeeDb[employeeId] = {...foundEmployee, ...req.body};
+            return responseHandler(res, 200, {Success: "employee successfully edited", updateInfo: employeeDb[employeeId]});
+        } catch (error) {
+            responseHandler(res, 500, {Error: error})
+        }
     }
 }
 

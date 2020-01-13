@@ -1,5 +1,6 @@
 const employeeDb = [{
-    fullName: 'manager name',
+    id: 1,
+    name: 'manager name',
     email: 'manager',
     national_id: "1199645217895410",
     phoneNumber: "0784231074",
