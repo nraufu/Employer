@@ -2,6 +2,9 @@ import express from 'express';
 import morgan from 'morgan';
 import managerRoute from './routes/manager';
 import employeeRoute from './routes/employee';
+import createTables from './models/createTables';
+
+createTables();
 
 const app = express();
 const port = process.env.PORT || 3000;

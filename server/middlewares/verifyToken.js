@@ -12,7 +12,7 @@ const verifyToken = (req, res, next) => {
         req.authorizedManager = authorizedManager;
         next();
     } catch (error) {
-        responseHandler(res, 500, {Error: 'Token invalid or expired'});
+        responseHandler(res, 401, {Unauthorized: 'Token invalid or expired'});
     }
 }
 
