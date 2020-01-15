@@ -19,3 +19,5 @@ app.use('/auth', managerRoute);
 app.use('/employees', employeeRoute);
 
 app.listen(port, () => console.log(`Listening to port ${port}`));
+
+export default app;
