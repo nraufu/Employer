@@ -7,7 +7,8 @@
     "start": "babel-node ./server/index.js",
     "dev": "nodemon --exec babel-node ./server/index.js",
     "build": "babel server -d dist",
-    "test": "nyc mocha --require @babel/register ./server/test/*.test.js --timeout 10000 --exit"
+    "test": "nyc mocha --require @babel/register ./server/test/*.test.js --timeout 10000 --exit",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
   },
   "repository": {
     "type": "git",
@@ -35,6 +36,7 @@
     "bcryptjs": "^2.4.3",
     "chai": "^4.2.0",
     "chai-http": "^4.3.0",
+    "coveralls": "^3.0.9",
     "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "joi": "^14.3.1",
