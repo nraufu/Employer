@@ -1,3 +1,4 @@
+import '@babel/polyfill';
 import nodemailer from 'nodemailer';
 
 const sendMail = async (name, email, position) => {
