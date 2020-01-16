@@ -6,8 +6,7 @@ const employeeDb = [{
     phoneNumber: "0784231074",
     date_of_birth: "16/04/1995",
     postion: "developer",
-    status: "active",
-    password: ""
+    status: "active"
 }];
 
 export default employeeDb;
