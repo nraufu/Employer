@@ -15,14 +15,12 @@ const sendMail = async (name, email, position) => {
     }
   });
 
-  let info = await transporter.sendMail({
+  await transporter.sendMail({
     from: '"Company Inc" <company@example.com>',
     to: `${email}`, 
     subject: "Admission ✔", 
     html: `<b>Dear ${name}</b> <p>We are to glad to inform you got the offer for the position of ${position} in Our company</p>`
   });
-  console.log("Message sent: %s", info.messageId);
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
 }
 
 export default sendMail;

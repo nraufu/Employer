@@ -22,14 +22,13 @@ const employee = {
             sendMail(newEmployee.name, newEmployee.email, newEmployee.position);
             responseHandler(res, 201, { "Success": "Employee created", newEmployee});
         } catch (error) {
-            responseHandler(res, 500, { "Error": error })
-            console.log(error);
+            responseHandler(res, 500, { "Error": error });
         }
     },
 
     editEmployee(req, res) {
         try {
-            const employeeId = employeeDb.findIndex((element) => element.id === Number(req.params.id));
+            const employeeId = employeeDb.find((element) => element.id === Number(req.params.id));
             if(!employeeId) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
             const foundEmployee = {...employeeDb[employeeId]};
             employeeDb[employeeId] = {...foundEmployee, ...req.body};

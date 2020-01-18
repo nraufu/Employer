@@ -13,3 +13,6 @@ deploy:
   github-token: $GITHUB_TOKEN
   on: 
     branch: develop
+
+notifications:
+  email: false
