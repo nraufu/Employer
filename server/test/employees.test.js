@@ -11,8 +11,8 @@ app.use(chaiHttp);
 let token;
 let cachedEntryId;
 
-describe('/POST add employee', () => {
-    it('return token to get authorization token', (done) => {
+describe('/POST SignUp input field validation test', () => {
+    it('return 200 ok status to get authorization token', (done) => {
         chai
             .request(app)
             .post('/auth/signin')
@@ -29,6 +29,100 @@ describe('/POST add employee', () => {
                 done();
             });
     });
+    it('should return 400 bad request status code when employee email is invalid', (done) => {
+        chai
+            .request(app)
+            .post('/employees/')
+            .set('x-auth-token', token)
+            .send(sample.employeeValidation2)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when employee national_Id is invalid', (done) => {
+        chai
+            .request(app)
+            .post('/employees/')
+            .set('x-auth-token', token)
+            .send(sample.employeeValidation3)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body.error).to.be.eql('Enter national Id must be 16 numbers');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when mnager phoneNumber is invalid', (done) => {
+        chai
+            .request(app)
+            .post('/employees/')
+            .set('x-auth-token', token)
+            .send(sample.employeeValidation4)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when employee status is not provided', (done) => {
+        chai
+            .request(app)
+            .post('/employees/')
+            .set('x-auth-token', token)
+            .send(sample.employeeValidation6)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when age is below required', (done) => {
+        chai
+            .request(app)
+            .post('/employees/')
+            .set('x-auth-token', token)
+            .send(sample.employeeValidation5)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when employee name is invalid', (done) => {
+        chai
+            .request(app)
+            .post('/employees/')
+            .set('x-auth-token', token)
+            .send(sample.employeeValidation1)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when employee position is not provided', (done) => {
+        chai
+            .request(app)
+            .post('/employees/')
+            .set('x-auth-token', token)
+            .send(sample.employeeValidation7)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+});
+
+describe('/POST add employee', () => {
     it('should return 201 created status code when employee added successfully', (done) => {
         chai
             .request(app)
@@ -65,7 +159,7 @@ describe('/POST add employee', () => {
                 done();
             });
     });
-    it('should return 401 unthorized status code when an invalid or expired token is set in headers', (done) => {
+    it('should return 401 unauthorized status code when an invalid or expired token is set in headers', (done) => {
         chai
             .request(app)
             .post('/employees/')
@@ -97,6 +191,92 @@ describe('/PUT edit', () => {
         chai
             .request(app)
             .put(`/employees/30`)
+            .set('x-auth-token', token)
+            .send(sample.editEmployee)
+            .end((err, res) => {
+                expect(res).to.have.status(404);
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when employee ID requested is not an integer', (done) => {
+        chai
+            .request(app)
+            .put(`/employees/manager`)
+            .set('x-auth-token', token)
+            .send(sample.editEmployee)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should 200 ok status code is activated successfully', (done) => {
+        chai
+            .request(app)
+            .put(`/employees/${cachedEntryId}/activate`)
+            .set('x-auth-token', token)
+            .send(sample.editEmployee)
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should 400 bad request status code when user already activated', (done) => {
+        chai
+            .request(app)
+            .put(`/employees/${cachedEntryId}/activate`)
+            .set('x-auth-token', token)
+            .send(sample.editEmployee)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should 200 ok status code when user is suspended successfully', (done) => {
+        chai
+            .request(app)
+            .put(`/employees/${cachedEntryId}/suspend`)
+            .set('x-auth-token', token)
+            .send(sample.editEmployee)
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should 400 bad request status code when user already suspended', (done) => {
+        chai
+            .request(app)
+            .put(`/employees/${cachedEntryId}/suspend`)
+            .set('x-auth-token', token)
+            .send(sample.editEmployee)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+});
+
+describe('/DELETE remove employee', () => {
+    it('should return 200 ok status code when employee successfully removed', (done) => {
+        chai
+            .request(app)
+            .delete(`/employees/${cachedEntryId}`)
+            .set('x-auth-token', token)
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                expect(res.body).to.have.property('deleted');
+                done();
+            })
+    });
+    it('should return 404 not found status code when employee ID not found', (done) => {
+        chai
+            .request(app)
+            .put(`/employees/0`)
             .set('x-auth-token', token)
             .send(sample.editEmployee)
             .end((err, res) => {

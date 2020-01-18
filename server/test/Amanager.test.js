@@ -20,6 +20,82 @@ describe('/GET API', () => {
     });
 });
 
+describe('/POST SignUp input field validation test', () => {
+    it('should return 400 bad request status code when manager email is invalid', (done) => {
+        chai
+            .request(app)
+            .post('/auth/signup')
+            .send(sample.signUpValidation1)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body.error).to.be.eql('Valid email is required');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when manager national_Id is invalid', (done) => {
+        chai
+            .request(app)
+            .post('/auth/signup')
+            .send(sample.signUpValidation2)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when mnager phoneNumber is invalid', (done) => {
+        chai
+            .request(app)
+            .post('/auth/signup')
+            .send(sample.signUpValidation3)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when manager is not accepted format', (done) => {
+        chai
+            .request(app)
+            .post('/auth/signup')
+            .send(sample.signUpValidation4)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when age is below required', (done) => {
+        chai
+            .request(app)
+            .post('/auth/signup')
+            .send(sample.signUpValidation5)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 400 bad request status code when manager name is invalid', (done) => {
+        chai
+            .request(app)
+            .post('/auth/signup')
+            .send(sample.signUpValidation6)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                expect(res.body).to.have.property('error');
+                expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+});
+
+
 describe('/POST signUp', () => {
     it('should return 201 status created code when new manager signup successfully', (done) => {
         chai
@@ -95,3 +171,4 @@ describe('/POST login', () => {
         });
     });
 });
+
