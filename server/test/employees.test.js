@@ -68,19 +68,6 @@ describe('/POST SignUp input field validation test', () => {
                 done();
             });
     });
-    it('should return 400 bad request status code when employee status is not provided', (done) => {
-        chai
-            .request(app)
-            .post('/employees/')
-            .set('x-auth-token', token)
-            .send(sample.employeeValidation6)
-            .end((err, res) => {
-                expect(res).to.have.status(400);
-                expect(res.body).to.have.property('error');
-                expect(res.body).to.be.an('object');
-                done();
-            });
-    });
     it('should return 400 bad request status code when age is below required', (done) => {
         chai
             .request(app)
@@ -91,6 +78,7 @@ describe('/POST SignUp input field validation test', () => {
                 expect(res).to.have.status(400);
                 expect(res.body).to.have.property('error');
                 expect(res.body).to.be.an('object');
+                console.log(err);
                 done();
             });
     });
@@ -132,7 +120,7 @@ describe('/POST add employee', () => {
             .end((err, res) => {
                 expect(res).to.have.status(201);
                 expect(res.body).to.be.an('object');
-                cachedEntryId = res.body.newEmployee.id;
+                cachedEntryId = res.body.newEmployeeInfo.id;
                 done();
             });
     });
@@ -223,18 +211,6 @@ describe('/PUT edit', () => {
                 done();
             });
     });
-    it('should 400 bad request status code when user already activated', (done) => {
-        chai
-            .request(app)
-            .put(`/employees/${cachedEntryId}/activate`)
-            .set('x-auth-token', token)
-            .send(sample.editEmployee)
-            .end((err, res) => {
-                expect(res).to.have.status(400);
-                expect(res.body).to.be.an('object');
-                done();
-            });
-    });
     it('should 200 ok status code when user is suspended successfully', (done) => {
         chai
             .request(app)
@@ -243,18 +219,6 @@ describe('/PUT edit', () => {
             .send(sample.editEmployee)
             .end((err, res) => {
                 expect(res).to.have.status(200);
-                expect(res.body).to.be.an('object');
-                done();
-            });
-    });
-    it('should 400 bad request status code when user already suspended', (done) => {
-        chai
-            .request(app)
-            .put(`/employees/${cachedEntryId}/suspend`)
-            .set('x-auth-token', token)
-            .send(sample.editEmployee)
-            .end((err, res) => {
-                expect(res).to.have.status(400);
                 expect(res.body).to.be.an('object');
                 done();
             });
