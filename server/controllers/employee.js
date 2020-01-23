@@ -1,81 +1,63 @@
-import employeeDb from '../models/employeeDb';
+import '@babel/polyfill';
 import responseHandler from '../helpers/response';
 import sendMail from '../helpers/sendMail';
+import {query} from '../models/connect';
+import queries from '../models/queries';
 
 const employee = {
-    addEmployee(req, res) {
+    async addEmployee(req, res) {
         try {
-            const { name, national_id, phoneNumber, email, date_of_birth, status, position } = req.body;
-            const employee = employeeDb.find((element) => element.email === email || element.national_id === national_id || element.phoneNumber === phoneNumber);
-            if(employee) return responseHandler(res, 409, {Error: "an Employee with the same email,phoneNumber or national Id already exists"})
-            const newEmployee = {
-                id: employeeDb.length + 1,
-                name: name,
-                national_id: national_id,
-                phoneNumber: phoneNumber,
-                email: email,
-                date_of_birth: date_of_birth,
-                status: status,
-                position: position
-            }
-            employeeDb.push(newEmployee);
-            sendMail(newEmployee.name, newEmployee.email, newEmployee.position);
-            responseHandler(res, 201, { "Success": "Employee created", newEmployee});
+            const { name, email, national_id, phoneNumber, date_of_birth, position } = req.body;
+            const employee = await query(queries.employeeAlreadyExist, [email, national_id, phoneNumber]);
+            if(employee.rowCount) return responseHandler(res, 409, {Error: "an Employee with the same email,phoneNumber or national Id already exists"});
+            const newEmployee = await query(queries.addEmployee, [req.authorizedManager.email,name,email, national_id, phoneNumber, date_of_birth, position]);
+            const newEmployeeInfo = newEmployee.rows[0];
+            sendMail(newEmployeeInfo.name, newEmployeeInfo.email, newEmployeeInfo.position);
+            return responseHandler(res, 201, { "Success": "Employee created", newEmployeeInfo});  
         } catch (error) {
-            responseHandler(res, 500, { "Error": error });
+            responseHandler(res, 500, { "Error": error.message });
         }
     },
 
-    editEmployee(req, res) {
+    async editEmployee(req, res) {
         try {
-            const employeeId = employeeDb.find((element) => element.id === Number(req.params.id));
-            if(!employeeId) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
-            const foundEmployee = {...employeeDb[employeeId]};
-            employeeDb[employeeId] = {...foundEmployee, ...req.body};
-            return responseHandler(res, 200, {Success: "employee successfully edited", updateInfo: employeeDb[employeeId]});
+            const { name, email, national_id, phoneNumber, date_of_birth, position } = req.body;
+            const employee = await query(queries.getEmployee, [req.authorizedManager.email, req.params.id]);
+            if(!employee.rowCount) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
+            const updateEmployeInfo = await query(queries.editEmployee, [name, email, national_id, phoneNumber, date_of_birth, position, req.authorizedManager.email, req.params.id]);
+            return responseHandler(res, 200, {Success: "employee successfully edited", updateInfo: updateEmployeInfo.rows[0]});
         } catch (error) {
-            responseHandler(res, 500, {Error: error})
+            responseHandler(res, 500, {Error: error.message})
         }
     },
 
-    activateEmployee(req, res){
+    async activateEmployee(req, res){
         try {
-            const employee = employeeDb.find((element) => element.id === Number(req.params.id));
-            if(!employee) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
-            if(employee.status === "inactive") {
-                employee.status = "active";
-                return responseHandler(res, 200, {Activation: "employee activated successfully", "employee status": employee.status});
-            } else { 
-                return responseHandler(res, 400, { badRequest: 'employee already active'})
-            }
+            const employee = await query(queries.activateEmployee, [req.authorizedManager.email, req.params.id, 'active']);
+            if(!employee.rowCount) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
+            if(employee.rows[0].status === "active") return responseHandler(res, 200, {Activation: "employee activated successfully", "employee status": employee.rows[0]});
         } catch (error) {
-            responseHandler(res, 500, {Error: error})
+            responseHandler(res, 500, {Error: error.message})
         }
     },
 
-    suspendEmployee(req, res){
+    async suspendEmployee(req, res){
         try {
-            const employee = employeeDb.find((element) => element.id === Number(req.params.id));
-            if(!employee) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
-            if(employee.status === "active") {
-                employee.status = "inactive";
-                return responseHandler(res, 200, {Activation: "employee Suspended successfully", "employee status": employee.status});
-            } else { 
-                return responseHandler(res, 400, { badRequest: 'employee already supsended'});
-            }
+            const employee = await query(queries.suspendEmployee, [req.authorizedManager.email, req.params.id, 'inactive']);
+            if(!employee.rowCount) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
+            if(employee.rows[0].status === "inactive") return responseHandler(res, 200, {Activation: "employee Suspended successfully", "employee status": employee.rows[0]});
         } catch (error) {
-            responseHandler(res, 500, {Error: error})
+            responseHandler(res, 500, {Error: error.message})
         }
     },
 
-    deleteEmployee(req, res){
+    async deleteEmployee(req, res){
         try {
-            const employeeIndex = employeeDb.findIndex((element) => element.id === Number(req.params.id));
-            if(!employeeIndex) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
-            employeeDb.splice(employeeIndex, 1);
+            const employee = await query(queries.deleteEmployee, [req.authorizedManager.email, req.params.id]);
+            if(!employee.rowCount) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
             return responseHandler(res, 200, { deleted: "employee removed successfully" });
         } catch (error) {
-            responseHandler(res, 500, {Error: error});
+            responseHandler(res, 500, {Error: error.message});
         }
     }
 }

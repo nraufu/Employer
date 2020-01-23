@@ -25,7 +25,6 @@ const sample = {
 		national_id: "1234567891234567",
 		phoneNumber: "0784542120",
 		date_of_birth: "01/02/1996",
-		status: "inactive",
 		position: "developer"
     },
     invalidToken: {
@@ -46,7 +45,6 @@ const sample = {
 		national_id: "123456789123",
 		phoneNumber: "078454212",
 		date_of_birth: "01/02/19860",
-		status: "inactive",
 		position: "Technician"
     },
     signUpValidation1: {
@@ -111,7 +109,6 @@ const sample = {
 		national_id: "1234567891234567",
 		phoneNumber: "0784542120",
 		date_of_birth: "01/02/1996",
-		status: "inactive",
 		position: "developer"
     },
     employeeValidation2: {
@@ -120,7 +117,6 @@ const sample = {
 		national_id: "1234567891234567",
 		phoneNumber: "0784542120",
 		date_of_birth: "01/02/1996",
-		status: "inactive",
 		position: "developer"
     },
     employeeValidation3: {
@@ -129,7 +125,6 @@ const sample = {
 		national_id: "14567891234567",
 		phoneNumber: "0784542120",
 		date_of_birth: "01/02/1996",
-		status: "inactive",
 		position: "developer"
     },
     employeeValidation4: {
@@ -138,7 +133,6 @@ const sample = {
 		national_id: "1234567891234567",
 		phoneNumber: "07542120",
 		date_of_birth: "01/02/1996",
-		status: "inactive",
 		position: "developer"
     },
     employeeValidation5: {
@@ -147,16 +141,6 @@ const sample = {
 		national_id: "1234567891234567",
 		phoneNumber: "0784542120",
 		date_of_birth: "01/02/1800",
-		status: "inactive",
-		position: "developer"
-    },
-    employeeValidation6: {
-        name: "fred",
-		email: "manager@gmail.com",
-		national_id: "1234567891234567",
-		phoneNumber: "0784542120",
-		date_of_birth: "01/02/1996",
-		status: " ",
 		position: "developer"
     },
     employeeValidation7: {
@@ -165,7 +149,6 @@ const sample = {
 		national_id: "1234567891234567",
 		phoneNumber: "0784542120",
 		date_of_birth: "01/02/1996",
-		status: "inactive",
 		position: " "
     },
 

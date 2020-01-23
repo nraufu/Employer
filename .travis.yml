@@ -5,6 +5,15 @@ cache:
   directories:
     - "node_modules"
 
+services:
+  - postgresql
+
+install:
+  - npm install
+  - npm install -g codecov
+
+before_script:
+  - psql -c 'create database employer;' -U postgres
 after_success: npm run coverage
 
 deploy:
