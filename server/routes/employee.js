@@ -6,6 +6,7 @@ import verifyToken from '../middlewares/verifyToken';
 const router = express.Router();
 
 router.post('/', verifyToken, validate.createEmployee, employee.addEmployee);
+router.post('/search', verifyToken, employee.searchEmployee);
 router.put('/:id',verifyToken, validate.paramValidation, employee.editEmployee);
 router.put('/:id/activate', verifyToken, validate.paramValidation, employee.activateEmployee);
 router.put('/:id/suspend', verifyToken, validate.paramValidation, employee.suspendEmployee);

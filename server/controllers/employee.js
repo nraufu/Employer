@@ -59,6 +59,17 @@ const employee = {
         } catch (error) {
             responseHandler(res, 500, {Error: error.message});
         }
+    },
+
+    async searchEmployee(req, res){
+        try {
+            const { email, position, name, phoneNumber} = req.body;
+            const employee =  await query(queries.searchEmployee, [req.authorizedManager.email, name, position, phoneNumber, email]);
+            if (!employee.rowCount) return responseHandler(res, 404, {Error: "Employee Doesn't exist"});
+            return responseHandler(res, 200, { search_completed: "employee found", employee: employee});
+        } catch (error) {
+            responseHandler(res, 500, {Error: error.message});
+        }
     }
 }
 
