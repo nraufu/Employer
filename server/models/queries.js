@@ -11,6 +11,8 @@ const queries = {
 
     getEmployee: 'SELECT employees.name, employees.email, employees.national_id, employees.phoneNumber, employees.date_of_birth, employees.status, employees.position FROM employees INNER JOIN manager ON employees.managerid = manager.id WHERE manager.email=$1 AND employees.id=$2',
 
+    searchEmployee: 'SELECT * FROM employees WHERE "position" IN ($1) OR "name" IN ($2) OR "email" IN ($3) OR "phonenumber" IN ($4)',
+
     editEmployee: 'UPDATE employees SET name=$1, email=$2,  national_id=$3, phoneNumber=$4, date_of_birth=$5, position=$6 FROM manager WHERE employees.managerid=manager.id AND manager.email=$7 AND employees.id=$8 RETURNING employees.id, employees.name, employees.email, employees.national_id, employees.phoneNumber, employees.position',
 
     deleteEmployee: 'DELETE FROM employees USING manager WHERE employees.managerid = manager.id AND manager.email=$1 AND employees.managerid=$2',

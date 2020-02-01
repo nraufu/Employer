@@ -22,7 +22,7 @@ const manager = {
             }
             });
         } catch(error) {
-            responseHandler(res, 500, {Error: error})
+            return responseHandler(res, 500, {Error: error})
         }
     },
 

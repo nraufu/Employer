@@ -161,6 +161,22 @@ describe('/POST add employee', () => {
     });
 });
 
+describe('/POST search employee', () => {
+  it('should return 200 ok status when an employee with either a given name, email, phoneNumber or position', (done) => {
+      chai
+          .request(app)
+          .post('/employees/search')
+          .set('x-auth-token', token)
+          .send({
+              position: 'developer'
+          })
+          .end((err, res) => {
+              expect(res).to.have.status(200);
+              done();
+          });
+  });  
+});
+
 describe('/PUT edit', () => {
     it('should return 200 ok status code when employee edited successfully', (done) => {
         chai
