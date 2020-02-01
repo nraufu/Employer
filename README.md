@@ -50,16 +50,18 @@ Test Api
 
 ## Working Routes
 
-|	Endpoint	            | Functionality         |
-|---------------------------|:---------------------:|
-|PUT /employees/:id/activate| activate employee     |   
-|PUT /employees/:id/suspend | suspend employee      |   
-|PUT /entries/:id           | edit employee         |
-|POST /employees            | add employee          |
-|DELETE /employees/:Id      | Remove an employee    |
-|POST /auth/signup          | Manager Register      |
-|POST /auth/login           | Manager Login         |
+|	Endpoint	            | Functionality            |
+|---------------------------|:---------------------:   |
+|PUT /employees/:id/activate| activate employee        |   
+|PUT /employees/:id/suspend | suspend employee         |   
+|PUT /employees/:id         | edit employee            |
+|POST /employees/:id        | search Employees based on|
+|                           | name, email or position  |
+|POST /employees            | add employee             |
+|DELETE /employees/:Id      | Remove an employee       |
+|POST /auth/signup          | Manager Register         |
+|POST /auth/login           | Manager Login            |
 
-## Author
+### Author
 
-*[name]: Niyonzi Rauf
+[NIYONZI Raufu](https://github.com/nraufu/)
