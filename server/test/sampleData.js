@@ -20,12 +20,20 @@ const sample = {
         password:"manager"
     },
     validEmployee: {
-        name: "fred",
+        name: "manager",
 		email: "manager@gmail.com",
 		national_id: "1234567891234567",
 		phoneNumber: "0784542120",
 		date_of_birth: "01/02/1996",
 		position: "developer"
+    },
+    anotherValidEmployee: {
+        name: "cleaner",
+		email: "cleaner@gmail.com",
+		national_id: "1615141312111009",
+		phoneNumber: "0788888888",
+		date_of_birth: "01/02/1996",
+		position: "cleaner"
     },
     invalidToken: {
         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Im1hbmFnZXIyQGdtYWlsLmNvbSIsImlhdCI6MTU3ODk0OTQzNiwiZXhwIjoxNTc5MDM1ODM2fQ.1Cy0BbMlJNEKHMGKpiOPYdMkNR7Ar4HNyk3QMfuN11k"

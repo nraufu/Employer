@@ -1,7 +1,11 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import sinon from 'sinon';
 import app from '../index';
 import sample from './sampleData';
+import {
+    pool
+} from '../models/connect';
 
 const {
     expect
@@ -159,22 +163,52 @@ describe('/POST add employee', () => {
                 done();
             });
     });
+    it('should return 500 error due to database error', (done) => {
+        const queryStub = sinon.stub(pool, 'query').throws(new Error('Query failed'));
+        chai
+            .request(app)
+            .post('/employees/')
+            .set('x-auth-token', token)
+            .send(sample.anotherValidEmployee)
+            .end((err, res) => {
+                expect(res).to.have.status(500);
+                expect(res.body).to.be.an('object');
+                queryStub.restore();
+                done();
+            });
+    });
 });
 
 describe('/POST search employee', () => {
-  it('should return 200 ok status when an employee with either a given name, email, phoneNumber or position', (done) => {
-      chai
-          .request(app)
-          .post('/employees/search')
-          .set('x-auth-token', token)
-          .send({
-              position: 'developer'
-          })
-          .end((err, res) => {
-              expect(res).to.have.status(200);
-              done();
-          });
-  });  
+    it('should return 200 ok status when an employee with either a given name, email, phoneNumber or position', (done) => {
+        chai
+            .request(app)
+            .post('/employees/search')
+            .set('x-auth-token', token)
+            .send({
+                position: 'developer'
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(200);
+                done();
+            });
+    });
+    it('should return 500 error due to database error', (done) => {
+        const queryStub = sinon.stub(pool, 'query').throws(new Error('Query failed'));
+        chai
+            .request(app)
+            .post('/employees/search')
+            .set('x-auth-token', token)
+            .send({
+                name: 'manager'
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(500);
+                expect(res.body).to.be.an('object');
+                queryStub.restore();
+                done();
+            });
+    });
 });
 
 describe('/PUT edit', () => {
@@ -239,6 +273,48 @@ describe('/PUT edit', () => {
                 done();
             });
     });
+    it('should return 500 error due to database error', (done) => {
+        const queryStub = sinon.stub(pool, 'query').throws(new Error('Query failed'));
+        chai
+            .request(app)
+            .put(`/employees/${cachedEntryId}/suspend`)
+            .set('x-auth-token', token)
+            .send(sample.editEmployee)
+            .end((err, res) => {
+                expect(res).to.have.status(500);
+                expect(res.body).to.be.an('object');
+                queryStub.restore();
+                done();
+            });
+    });
+    it('should return 500 error due to database error', (done) => {
+        const queryStub = sinon.stub(pool, 'query').throws(new Error('Query failed'));
+        chai
+            .request(app)
+            .put(`/employees/${cachedEntryId}/activate`)
+            .set('x-auth-token', token)
+            .send(sample.editEmployee)
+            .end((err, res) => {
+                expect(res).to.have.status(500);
+                expect(res.body).to.be.an('object');
+                queryStub.restore();
+                done();
+            });
+    });
+    it('should return 500 error due to database error', (done) => {
+        const queryStub = sinon.stub(pool, 'query').throws(new Error('Query failed'));
+        chai
+            .request(app)
+            .put(`/employees/${cachedEntryId}`)
+            .set('x-auth-token', token)
+            .send(sample.editEmployee)
+            .end((err, res) => {
+                expect(res).to.have.status(500);
+                expect(res.body).to.be.an('object');
+                queryStub.restore();
+                done();
+            });
+    });
 });
 
 describe('/DELETE remove employee', () => {
@@ -262,6 +338,19 @@ describe('/DELETE remove employee', () => {
             .end((err, res) => {
                 expect(res).to.have.status(404);
                 expect(res.body).to.be.an('object');
+                done();
+            });
+    });
+    it('should return 500 error due to database error', (done) => {
+        const queryStub = sinon.stub(pool, 'query').throws(new Error('Query failed'));
+        chai
+            .request(app)
+            .delete(`/employees/${cachedEntryId}`)
+            .set('x-auth-token', token)
+            .end((err, res) => {
+                expect(res).to.have.status(500);
+                expect(res.body).to.be.an('object');
+                queryStub.restore();
                 done();
             });
     });
