@@ -12,27 +12,8 @@ class Employee {
             if(employee.rowCount) return responseHandler(res, 409, {Error: "an Employee with the same email,phoneNumber or national Id already exists"});
             const newEmployee = await query(queries.addEmployee, [req.authorizedManager.email,name,email, national_id, phoneNumber, date_of_birth, position]);
             const newEmployeeInfo = newEmployee.rows[0];
-
-            let transporter = nodemailer.createTransport({
-                host: "smtp.mailspons.com",
-                port: 587,
-                secure: false, 
-                auth: {
-                  user: '64df3262e765428780b80fdf266daafb',
-                  pass: 'fdcd986e70c842329747012132878660' 
-                },
-                tls: {
-                    rejectUnauthorized: false
-                }
-              });
-            
-              await transporter.sendMail({
-                from: '"Company Inc" <company@example.com>',
-                to: `${email}`, 
-                subject: "Admission ✔", 
-                html: `<b>Dear ${name}</b> <p>We are to glad to inform you got the offer for the position of ${position} in Our company</p>`
-              });
-
+            let transporter = nodemailer.createTransport({host: "smtp.mailspons.com",port: 587, secure: false, auth: {user: '64df3262e765428780b80fdf266daafb', pass: 'fdcd986e70c842329747012132878660'}, tls: {rejectUnauthorized: false}});
+            await transporter.sendMail({from: '"Company Inc" <company@example.com>', to: `${email}`, subject: "Admission ✔", html: `<b>Dear ${name}</b> <p>We are to glad to inform you got the offer for the position of ${position} in Our company</p>`});
             return responseHandler(res, 201, { "Success": "Employee created", newEmployeeInfo});  
         } catch (error) {
             return responseHandler(res, 500, { "Error": error.message });
