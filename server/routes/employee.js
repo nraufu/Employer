@@ -1,15 +1,15 @@
 import express from 'express';
-import employee from '../controllers/employee';
+import Employee from '../controllers/employee';
 import validate from '../middlewares/validate';
 import verifyToken from '../middlewares/verifyToken';
 
 const router = express.Router();
 
-router.post('/', verifyToken, validate.createEmployee, employee.addEmployee);
-router.post('/search', verifyToken, employee.searchEmployee);
-router.put('/:id',verifyToken, validate.paramValidation, employee.editEmployee);
-router.put('/:id/activate', verifyToken, validate.paramValidation, employee.activateEmployee);
-router.put('/:id/suspend', verifyToken, validate.paramValidation, employee.suspendEmployee);
-router.delete('/:id', verifyToken, validate.paramValidation, employee.deleteEmployee);
+router.post('/', verifyToken, validate.createEmployee, Employee.addEmployee);
+router.post('/search', verifyToken, Employee.searchEmployee);
+router.put('/:id',verifyToken, validate.paramValidation, Employee.editEmployee);
+router.put('/:id/activate', verifyToken, validate.paramValidation, Employee.activateEmployee);
+router.put('/:id/suspend', verifyToken, validate.paramValidation, Employee.suspendEmployee);
+router.delete('/:id', verifyToken, validate.paramValidation, Employee.deleteEmployee);
 
 export default router;

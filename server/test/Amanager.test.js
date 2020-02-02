@@ -1,5 +1,7 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
+import sinon from 'sinon';
+import {pool} from '../models/connect';
 import app from '../index';
 import sample from './sampleData';
 
@@ -111,23 +113,36 @@ describe('/POST signUp', () => {
     });
     it('should return 409 conflict status code when manager with same email, phoneNumber or id already exist', (done) => {
         chai
-        .request(app)
-        .post('/auth/signup')
-        .send(sample.validManager)
-        .end((err, res) => {
-            expect(res).to.have.status(409);
-            done();
-        });
+            .request(app)
+            .post('/auth/signup')
+            .send(sample.validManager)
+            .end((err, res) => {
+                expect(res).to.have.status(409);
+                done();
+            });
     });
     it('should return 400 bad request status code when submit invalid values', (done) => {
         chai
-        .request(app)
-        .post('/auth/signup')
-        .send(sample.invalidManager)
-        .end((err, res) => {
-            expect(res).to.have.status(400);
-            done();
-        });
+            .request(app)
+            .post('/auth/signup')
+            .send(sample.invalidManager)
+            .end((err, res) => {
+                expect(res).to.have.status(400);
+                done();
+            });
+    });
+    it('should return 500 error due to database error', (done) => {
+        const queryStub = sinon.stub(pool, 'query').throws(new Error('Query failed'));
+        chai
+            .request(app)
+            .post('/auth/signup')
+            .send(sample.validManager)
+            .end((err, res) => {
+                expect(res).to.have.status(500);
+                expect(res.body).to.be.an('object');
+                queryStub.restore();
+                done();
+            });
     });
 });
 
@@ -161,14 +176,29 @@ describe('/POST login', () => {
     });
     it('should return 404 not found status code when user doesn\'t exist ', (done) => {
         chai
-        .request(app)
-        .post('/auth/signin')
-        .send(sample.unknownUser)
-        .end((err, res) => {
-            expect(res).to.have.status(404);
-            expect(res.body).to.have.property('Error');
-            done();
-        });
+            .request(app)
+            .post('/auth/signin')
+            .send(sample.unknownUser)
+            .end((err, res) => {
+                expect(res).to.have.status(404);
+                expect(res.body).to.have.property('Error');
+                done();
+            });
+    });
+    it('should return 500 error due to database error', (done) => {
+        const queryStub = sinon.stub(pool, 'query').throws(new Error('Query failed'));
+        chai
+            .request(app)
+            .post('/auth/signin')
+            .send({
+                email: sample.validManager.email,
+                password: sample.validManager.password
+            })
+            .end((err, res) => {
+                expect(res).to.have.status(500);
+                expect(res.body).to.be.an('object');
+                queryStub.restore();
+                done();
+            });
     });
 });
-

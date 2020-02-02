@@ -15,6 +15,7 @@ Employer is a management system used by manager in an organization to keep track
 - Manager can edit an employee.
 - Manager can remove an employee.
 - Manager can suspend or activate an employee.
+- Manager can search an employee based on their position, name, email or phoneNumber.
 
 ## Technologies
 

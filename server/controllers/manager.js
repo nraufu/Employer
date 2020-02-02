@@ -5,8 +5,8 @@ import responseHandler from '../helpers/response';
 import {query} from '../models/connect';
 import queries from '../models/queries';
 
-const manager = {
-    async createManager(req, res) {
+class Manager {
+    static async createManager(req, res) {
         try {
             const { fullName , email, national_id, phoneNumber, date_of_birth, password } = req.body;
             const user = await query(queries.managerAlreadyExist, [email,national_id,phoneNumber]);
@@ -24,9 +24,9 @@ const manager = {
         } catch(error) {
             return responseHandler(res, 500, {Error: error})
         }
-    },
+    }
 
-    async loginManager(req, res) {
+    static async loginManager(req, res) {
         try {
             const { email, password } = req.body;
             const user = await query(queries.getManager, [email]);
@@ -42,4 +42,4 @@ const manager = {
 }
 
 
-export default manager;
+export default Manager;
